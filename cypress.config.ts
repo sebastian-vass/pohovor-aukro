@@ -1,10 +1,10 @@
-const { defineConfig } = require("cypress");
+import { defineConfig } from 'cypress'
 
-module.exports = defineConfig({
+export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       config.baseUrl = 'https://aukro.cz'
       return config
-    },
-  },
+    }
+  }
 });
