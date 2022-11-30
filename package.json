@@ -1,4 +1,5 @@
 {
+  "name": "pohovor-aukro",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "cypress": "^11.2.0",
