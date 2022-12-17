@@ -14,5 +14,6 @@ Cypress.Commands.add('selectParametersByCheckbox', (parameters: string[], parame
       cy.wrap(Cypress.$('li', parameterFilter)).contains(parameter).click()
       cy.wait('@showProductAfterFiltering')
     })
+    cy.url().should('include', '?paymentViaAukro=true')
   })
 })

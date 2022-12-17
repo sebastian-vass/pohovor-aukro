@@ -1,5 +1,6 @@
 describe('Aukro task assignment', () => {
-  const PARAMETERS = ['Garance vrácení peněz']
+  const PARAMETERS: string[] = ['Garance vrácení peněz']
+  const SUPPLY_NUMBER: number = 4
 
   before(() => {
     cy.intercept('GET', '/sid/json?**').as('gdpr')
@@ -19,6 +20,11 @@ describe('Aukro task assignment', () => {
               if (!href.includes('/stranka')) {
                 cy.visit(href)
                 cy.selectParametersByCheckbox(PARAMETERS, 'auk-simple-filter-checkbox > div > ul')
+                cy.get('.details > span').invoke('text').then((supplyPageNumber) => {
+                  if (Number(supplyPageNumber.replace(/\s/g, '')) > SUPPLY_NUMBER) {
+                    cy.log(supplyPageNumber)
+                  }
+                })
               }
             })
         })
