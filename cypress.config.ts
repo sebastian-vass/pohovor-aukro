@@ -6,7 +6,11 @@ export default defineConfig({
       config.baseUrl = 'https://aukro.cz'
       config.video = false
       config.viewportHeight = 1080
-      config.viewportWidth = 1400
+      config.viewportWidth = 1920
+
+      config.env = {
+        hideCalls: true
+      }
 
       return config
     }
