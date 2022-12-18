@@ -3,7 +3,8 @@
 declare namespace Cypress {
   interface Chainable {
     selectParametersByCheckbox(parameters: string[], parameterBox: string): Chainable<void>
-    checkNumberOfBudges(): Chainable<void>
+    checkNumberOfBudges(card, cardNumber: number): Chainable<void>
+    getSupplyDetail(cardNumber: number): Chainable<void>
   }
 }
 
@@ -19,14 +20,30 @@ Cypress.Commands.add('selectParametersByCheckbox', (parameters: string[], parame
   })
 })
 
-Cypress.Commands.add('checkNumberOfBudges', () => {
-  cy.get('auk-list-card').then((card) => {
-    cy.wrap(Cypress.$('span > auk-svg-icon-legacy#money-back-guarantee2', card)).then((moneyBack) => {
-      if (card.length === (moneyBack.length / 2)) {
-        cy.log('All products have badges: Garance vrácení peněz')
-      } else {
-        cy.log(`The numbers dont match. Badges number: ${moneyBack.length / 2} card number: ${card.length}`)
-      }
-    })
+Cypress.Commands.add('checkNumberOfBudges', (card, cardNumber: number) => {
+  cy.wrap(Cypress.$('span > auk-svg-icon-legacy#money-back-guarantee2', card)).then((moneyBack) => {
+    if (cardNumber === (moneyBack.length / 2)) {
+      cy.log('All products have badges: Garance vrácení peněz')
+    } else {
+      cy.log(`The numbers dont match. Badges number: ${moneyBack.length / 2} card number: ${cardNumber}`)
+    }
   })
+})
+
+Cypress.Commands.add('getSupplyDetail', (cardNumber: number) => {
+  if ((cardNumber % 0) === 0) {
+    cy.get('auk-list-card > div > a').eq(Math.floor(Math.random() * cardNumber))
+      .scrollIntoView()
+      .invoke('attr', 'href')
+      .then((href) => {
+        cy.visit(href)
+      })
+  } else {
+    cy.get('auk-list-card > div > a').eq(Math.ceil(cardNumber / 2))
+      .scrollIntoView()
+      .invoke('attr', 'href')
+      .then((href) => {
+        cy.visit(href)
+      })
+  }
 })
