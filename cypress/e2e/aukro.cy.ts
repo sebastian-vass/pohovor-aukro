@@ -1,6 +1,10 @@
 describe('Aukro task assignment', () => {
   const PARAMETERS: string[] = ['Garance vrácení peněz']
   const SUPPLY_NUMBER: number = 4
+  const PAYMENT_BANNER: object = {
+    bannerAttribute: 'auk-banner-payment-via-aukro',
+    iconId: '#money-back-guarantee'
+  }
 
   before(() => {
     cy.intercept('GET', '/sid/json?**').as('gdpr')
@@ -10,9 +14,6 @@ describe('Aukro task assignment', () => {
   })
 
   it('Get menu', () => {
-  })
-
-  it.only('Get menu', () => {
     cy.get('.main-menu').then((mainMenu) => {
       cy.wrap(Cypress.$('auk-top-level-category > div > a ', mainMenu))
         .eq(1) // Necessary for debugging
@@ -31,6 +32,7 @@ describe('Aukro task assignment', () => {
 
                       cy.checkNumberOfBudges(card, CARD_NUMBER)
                       cy.getSupplyDetail(CARD_NUMBER)
+                      cy.checkBudgesOnDetailProduct(PAYMENT_BANNER)
                     })
                   }
                 })

@@ -5,6 +5,7 @@ declare namespace Cypress {
     selectParametersByCheckbox(parameters: string[], parameterBox: string): Chainable<void>
     checkNumberOfBudges(card, cardNumber: number): Chainable<void>
     getSupplyDetail(cardNumber: number): Chainable<void>
+    checkBudgesOnDetailProduct(budges: any): Chainable<void>
   }
 }
 
@@ -21,13 +22,14 @@ Cypress.Commands.add('selectParametersByCheckbox', (parameters: string[], parame
 })
 
 Cypress.Commands.add('checkNumberOfBudges', (card, cardNumber: number) => {
-  cy.wrap(Cypress.$('span > auk-svg-icon-legacy#money-back-guarantee2', card)).then((moneyBack) => {
-    if (cardNumber === (moneyBack.length / 2)) {
-      cy.log('All products have badges: Garance vrácení peněz')
-    } else {
-      cy.log(`The numbers dont match. Badges number: ${moneyBack.length / 2} card number: ${cardNumber}`)
-    }
-  })
+  cy.wrap(Cypress.$('span > auk-svg-icon-legacy#money-back-guarantee2', card))
+    .then((moneyBack) => {
+      if (cardNumber === (moneyBack.length / 2)) {
+        cy.log('All products have badges: Garance vrácení peněz')
+      } else {
+        cy.log(`The numbers dont match. Badges number: ${moneyBack.length / 2} card number: ${cardNumber}`)
+      }
+    })
 })
 
 Cypress.Commands.add('getSupplyDetail', (cardNumber: number) => {
@@ -46,4 +48,13 @@ Cypress.Commands.add('getSupplyDetail', (cardNumber: number) => {
         cy.visit(href)
       })
   }
+})
+
+Cypress.Commands.add('checkBudgesOnDetailProduct', (budges: any) => {
+  cy.get(budges.bannerAttribute)
+    .should('be.visible')
+    .then((banner) => {
+      expect(banner).to.have.length(1)
+      cy.wrap(Cypress.$(budges.iconId, banner)).should('be.visible')
+    })
 })
