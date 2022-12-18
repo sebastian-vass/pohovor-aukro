@@ -6,6 +6,9 @@ declare namespace Cypress {
     checkNumberOfBudges(card, cardNumber: number): Chainable<void>
     getSupplyDetail(cardNumber: number): Chainable<void>
     checkBudgesOnDetailProduct(budges: any): Chainable<void>
+    makeBuyNow(): Chainable<void>
+    makeAddPrice(): Chainable<void>
+    checkBasket(): Chainable<void>
   }
 }
 
@@ -57,4 +60,32 @@ Cypress.Commands.add('checkBudgesOnDetailProduct', (budges: any) => {
       expect(banner).to.have.length(1)
       cy.wrap(Cypress.$(budges.iconId, banner)).should('be.visible')
     })
+})
+
+Cypress.Commands.add('makeBuyNow', () => {
+  cy.intercept('POST', '**/backend-web/api/cart/item').as('addProductToBasket')
+  cy.get('.auk-button-content').contains('Koupit').click()
+  cy.wait('@addProductToBasket')
+})
+
+Cypress.Commands.add('makeAddPrice', () => {
+  cy.intercept('POST', '**/backend-web/api/offers/**/bid?fastBid=true').as('fastBid')
+  cy.get('.auk-button-content').contains('Přihodit').click()
+  cy.wait('@fastBid')
+})
+
+Cypress.Commands.add('checkBasket', () => {
+  // Check if product was successfully added to shopping card. (Status length > 0)
+  // If wasn`t, then print error with text of toast. (Status length === 0)
+  cy.document().then(doc => {
+    if (doc.querySelectorAll('auk-basket-control > div.dropdown-submenu').length > 0) {
+      cy.log('Product was successfully added to your shopping cart.').end()
+    } else {
+      cy.get('auk-toast > .tw-rounded')
+        .invoke('text')
+        .then(text => {
+          cy.log('Product has not been added to your cart. Issue with: ' + text).end()
+        })
+    }
+  })
 })
