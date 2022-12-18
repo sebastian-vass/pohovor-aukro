@@ -14,6 +14,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/strict-boolean-expressions': 'off',
     '@typescript-eslint/triple-slash-reference': 'off',
-    '@typescript-eslint/method-signature-style': 'off'
+    '@typescript-eslint/method-signature-style': 'off',
+    '@typescript-eslint/quotes': 'off'
   }
 }

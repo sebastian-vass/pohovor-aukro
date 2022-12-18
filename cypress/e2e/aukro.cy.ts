@@ -22,7 +22,8 @@ describe('Aukro task assignment', () => {
                 cy.selectParametersByCheckbox(PARAMETERS, 'auk-simple-filter-checkbox > div > ul')
                 cy.get('.details > span').invoke('text').then((supplyPageNumber) => {
                   if (Number(supplyPageNumber.replace(/\s/g, '')) > SUPPLY_NUMBER) {
-                    cy.log(supplyPageNumber)
+                    cy.scrollTo('bottom', { duration: 3000 })
+                    cy.checkNumberOfBudges()
                   }
                 })
               }
