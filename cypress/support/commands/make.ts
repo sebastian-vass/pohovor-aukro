@@ -33,6 +33,7 @@ Cypress.Commands.add('makeBidToAuction', () => {
 })
 
 Cypress.Commands.add('makeBuyRightNow', () => {
+  // After click on button buy, shows error toast.
   cy.makeBuyNow()
   cy.get('auk-toast').contains('Tento produkt se dá koupit jen pomocí Platby přes Aukro. K jeho koupi se, prosím, přihlaste.').should('be.visible')
 })

@@ -10,20 +10,26 @@ describe('Aukro task assignment', () => {
   before(() => {
     cy.visit('/')
     cy.acceptGDPR()
+    cy.saveLocalStorage()
+  })
+
+  beforeEach(() => {
+    cy.restoreLocalStorage()
   })
 
   function selectRightCategory (visitedCategory: number, totalCategories: number): any {
-    if (visitedCategory <= totalCategories) {
-      if (nextPass) {
-        cy.get('.main-menu > auk-top-level-category > div > a ').eq(visitedCategory)
+    if (visitedCategory <= totalCategories) { // Check if we are in range of Categories
+      if (nextPass) { // Check if to continue
+        cy.get('.main-menu > auk-top-level-category > div > a ')
+          .eq(visitedCategory)
           .invoke('attr', 'href').then((href) => {
-            if (!href.includes('/stranka') && nextPass) {
+            if (!href.includes('/stranka') && nextPass) { // There are sites in the list that we ignore. Do not contain products.
               cy.visit(href)
               cy.selectParametersByCheckbox(PARAMETERS, 'auk-simple-filter-checkbox > div > ul')
               cy.get('.details > span')
                 .invoke('text')
                 .then((supplyPageNumber) => {
-                  nextPass = Number(supplyPageNumber.replace(/\s/g, '')) < SUPPLY_NUMBER
+                  nextPass = Number(supplyPageNumber.replace(/\s/g, '')) < SUPPLY_NUMBER // Check if the category has more than 4 bids.
                 })
             }
             visitedCategory++
@@ -37,18 +43,19 @@ describe('Aukro task assignment', () => {
   }
 
   it('Selecting the correct category based on the task', () => {
-    cy.get('.main-menu > auk-top-level-category > div > a ').then((categories) => {
-      selectRightCategory(0, (Cypress.$(categories).length - 1))
-    })
+    cy.get('.main-menu > auk-top-level-category > div > a ')
+      .then((categories) => {
+        selectRightCategory(0, (Cypress.$(categories).length - 1))
+      })
   })
 
   it('Selecting product detail based on conditions', () => {
     cy.scrollTo('bottom', { duration: 5000 })
-    cy.get('auk-list-card').then((card) => {
-      const CARD_NUMBER: number = card.length
-      cy.checkNumberOfBudges(card, CARD_NUMBER)
-      cy.getSupplyDetail(CARD_NUMBER)
-    })
+    cy.get('auk-list-card')
+      .then((listOfCards) => {
+        cy.checkNumberOfBudges(listOfCards)
+        cy.getSupplyDetail(listOfCards.length)
+      })
   })
 
   it('Check the badge "Garance vrácení peněz" on the product detail.', () => {
@@ -63,13 +70,15 @@ describe('Aukro task assignment', () => {
           cy.makeBuyNow()
           cy.checkBasket()
         } else if (typeOfSupply.match('Aukce')) {
-          cy.document().then(doc => {
-            if (doc.querySelectorAll('auk-item-detail-bidding-buy-now > div auk-button > button').length > 0) {
-              (Math.random() < 0.5) ? cy.makeBuyRightNow() : cy.makeBidToAuction()
-            } else {
-              cy.makeBidToAuction()
-            }
-          })
+          cy.document()
+            .then(doc => {
+            // If the product (auction) detail contains a Buy button, make a random selection between Auction and Buy.
+              if (doc.querySelectorAll('auk-item-detail-bidding-buy-now > div auk-button > button').length > 0) {
+                (Math.random() < 0.5) ? cy.makeBuyRightNow() : cy.makeBidToAuction()
+              } else {
+                cy.makeBidToAuction()
+              }
+            })
         }
       })
   })

@@ -9,11 +9,14 @@ declare namespace Cypress {
 Cypress.Commands.add('selectParametersByCheckbox', (parameters: string[], parameterBox: string) => {
   cy.intercept('POST', 'https://backend.aukro.cz/backend-web/api/measurement/show').as('showProductAfterFiltering')
 
-  cy.get(parameterBox).then((parameterFilter) => {
-    parameters.forEach((parameter) => {
-      cy.wrap(Cypress.$('li', parameterFilter)).contains(parameter).click()
-      cy.wait('@showProductAfterFiltering')
+  cy.get(parameterBox)
+    .then((parameterFilter) => {
+      parameters.forEach((parameter) => {
+        cy.wrap(Cypress.$('li', parameterFilter))
+          .contains(parameter)
+          .click()
+        cy.wait('@showProductAfterFiltering')
+      })
+      cy.url().should('include', '?paymentViaAukro=true')
     })
-    cy.url().should('include', '?paymentViaAukro=true')
-  })
 })

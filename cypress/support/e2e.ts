@@ -2,6 +2,7 @@ import './commands/commands'
 import './commands/check'
 import './commands/make'
 import './commands/select'
+import "cypress-localstorage-commands"
 
 // Removing XHR and Fetch calls in open view
 const APP = window.top

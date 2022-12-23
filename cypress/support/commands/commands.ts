@@ -8,7 +8,8 @@ declare namespace Cypress {
 }
 
 Cypress.Commands.add('getSupplyDetail', (cardNumber: number) => {
-  if ((cardNumber % 0) === 0) {
+  // If there is an even number of products, select a random product else select the middle one.
+  if ((cardNumber % 2) === 0) {
     cy.get('auk-list-card > div > a').eq(Math.floor(Math.random() * cardNumber))
       .scrollIntoView()
       .invoke('attr', 'href')

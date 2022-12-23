@@ -16,6 +16,7 @@ module.exports = {
     '@typescript-eslint/triple-slash-reference': 'off',
     '@typescript-eslint/method-signature-style': 'off',
     '@typescript-eslint/quotes': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
     'prefer-const': 'off',
     'no-useless-return': 'off'
   }

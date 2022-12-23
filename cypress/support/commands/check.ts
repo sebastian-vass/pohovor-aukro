@@ -4,7 +4,7 @@ declare namespace Cypress {
   interface Chainable {
     checkBasket(): Chainable<void>
     checkBudgesOnDetailProduct(budges: any): Chainable<void>
-    checkNumberOfBudges(card, cardNumber: number): Chainable<void>
+    checkNumberOfBudges(card: any): Chainable<void>
   }
 }
 
@@ -35,13 +35,13 @@ Cypress.Commands.add('checkBudgesOnDetailProduct', (budges: any) => {
     })
 })
 
-Cypress.Commands.add('checkNumberOfBudges', (card, cardNumber: number) => {
+Cypress.Commands.add('checkNumberOfBudges', (card) => {
   cy.wrap(Cypress.$('span > auk-svg-icon-legacy#money-back-guarantee2', card))
     .then((moneyBack) => {
-      if (cardNumber === (moneyBack.length / 2)) {
+      if (card.length === (moneyBack.length / 2)) {
         cy.log('All products have badges: Garance vrácení peněz')
       } else {
-        cy.log(`The numbers dont match. Badges number: ${moneyBack.length / 2} card number: ${cardNumber}`)
+        cy.log(`The numbers dont match. Badges number: ${moneyBack.length / 2} card number: ${card.length}`)
       }
     })
 })
