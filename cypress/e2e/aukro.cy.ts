@@ -17,6 +17,15 @@ describe('Aukro task assignment', () => {
     cy.restoreLocalStorage()
   })
 
+  afterEach(() => {
+    cy.document()
+      .then(doc => {
+        if (doc.querySelectorAll('auk-email-collector-popup').length > 0) {
+          cy.get('auk-email-collector-popup > header > a').click()
+        }
+      })
+  })
+
   function selectRightCategory (visitedCategory: number, totalCategories: number): any {
     if (visitedCategory <= totalCategories) { // Check if we are in range of Categories
       if (nextPass) { // Check if to continue
